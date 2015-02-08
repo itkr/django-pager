@@ -2,20 +2,20 @@
 from django.utils.functional import cached_property
 
 
-class _Pager(object):
+class Pager(object):
 
-    def __init__(self, cls, page_length, order_by, *args, **kwargs):
+    def __init__(self, cls, page_length, order_by, attrs={}):
         index = 1
         self.page_length = page_length
-        self._filter = self._make_filter(cls, order_by, *args, **kwargs)
+        self._filter = self._make_filter(cls, order_by, **attrs)
         self.count = self._get_count()
         self.data = self._get_data(index)
         self._update_information(index)
 
-    def _make_filter(self, cls, order_by, *args, **kwargs):
+    def _make_filter(self, cls, order_by, **attrs):
         def _filter():
-            return cls.objects.filter(*args, **kwargs).order_by(order_by) \
-                if order_by else cls.objects.filter(*args, **kwargs)
+            return cls.objects.filter(**attrs).order_by(order_by) \
+                if order_by else cls.objects.filter(**attrs)
         return _filter
 
     def _get_count(self):
@@ -75,5 +75,5 @@ class PagerMixin(object):
     """
 
     @classmethod
-    def get_pager(cls, page_length=20, order_by=None, *args, **kwargs):
-        return _Pager(cls, page_length, order_by, *args, **kwargs)
+    def get_pager(cls, page_length=20, order_by=None, attrs={}):
+        return Pager(cls, page_length, order_by, attrs)
