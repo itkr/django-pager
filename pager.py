@@ -56,6 +56,14 @@ class Pager(object):
     def previous_page_number(self):
         return self.index - 1
 
+    def start_index(self):
+        # TODO: 実装
+        pass
+
+    def end_index(self):
+        # TODO: 実装
+        pass
+
     @cached_property
     def count(self):
         return self._get_count()
